@@ -4,31 +4,25 @@ class Board
   attr_reader :board
 
   def initialize
-    @board = Array.new(6) { Array.new(7) }
+    @board = Array.new(6) { Array.new(7, 0) }
   end
 
   def display_board
     puts 'Behold the board:'
-    puts '| 1 | 2 | 3 | 4 | 5 | 6 | 7 |'
+    print "#{(1..7).to_a} \n"
     @board.each do |row|
       puts row.to_s
     end
   end
 
-  def assign_hash
+  def assign_nums
     range = (1..42).to_a
+    num_board = []
     board.each do |row|
-      row.map! { range.shift }
+      num_board += row.map { range.shift }
     end
-    p @board
-    # column = board.transpose
-    # p range
-    # p column
-    # column.each do |row|
-    #   row.each do |cell|
-    #     p cell
-    #   end
-    # end
-    # p column
+    p num_board
+    # columns = num_board.transpose
+    # p columns
   end
 end
