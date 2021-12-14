@@ -38,6 +38,11 @@ class Game
       drop_piece(column, row, @turn + 1)
     end
 
+    if winning_move?(1) == true
+      puts 'Player 1 wins!'
+      @game_over = true
+    end
+
     display_board
     @turn += 1
     @turn %= 2
@@ -48,16 +53,30 @@ class Game
   end
 
   def valid_move?(column)
-    @board[5][column].zero?
+    @board[ROW_COUNT - 1][column].zero?
   end
 
   def get_next_open_row(column)
-    0.upto(ROW_COUNT - 1) do |i|
-      return i if @board[i][column].zero?
+    0.upto(ROW_COUNT - 1) do |row|
+      return row if @board[row][column].zero?
+    end
+  end
+
+  def winning_move?(piece)
+    # check horiztonal
+    0.upto(COLUMN_COUNT - 3) do |column|
+      0.upto(ROW_COUNT - 1) do |row|
+        # p [row, column]
+        # p @board[row][column]
+        return true if @board[row][column] == piece &&
+                       @board[row][column + 1] == piece &&
+                       @board[row][column + 2] == piece &&
+                       @board[row][column + 3] == piece
+      end
     end
   end
 end
 
-# game = Game.new
-# game.display_board
-# game.player_input
+game = Game.new
+game.display_board
+game.player_input
