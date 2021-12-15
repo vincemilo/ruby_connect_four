@@ -23,12 +23,12 @@ class Game
   def player_input
     while @game_over == false
       if @turn.zero?
-        puts 'Player 1 select your column (0-6):'
+        puts 'Player 1 select your column (1-7):'
       else
-        puts 'Player 2 select your column (0-6):'
+        puts 'Player 2 select your column (1-7):'
       end
       column = gets.chomp.to_i
-      check_input(column)
+      check_input(column - 1)
     end
   end
 
@@ -38,9 +38,15 @@ class Game
       drop_piece(column, row, @turn + 1)
     end
 
-    if winning_move?(1) == true
-      puts 'Player 1 wins!'
+    if winning_move?(@turn + 1) == true
+      display_board
+      if @turn.zero?
+        puts 'Player 1 wins!'
+      else
+        puts 'Player 2 wins!'
+      end
       @game_over = true
+      return
     end
 
     display_board
@@ -63,11 +69,15 @@ class Game
   end
 
   def winning_move?(piece)
-    # check horiztonal
+    check_horizontal(piece)
+    check_vertical(piece)
+    check_positive_diag(piece)
+    check_negative_diag(piece)
+  end
+
+  def check_horizontal(piece)
     0.upto(COLUMN_COUNT - 3) do |column|
       0.upto(ROW_COUNT - 1) do |row|
-        # p [row, column]
-        # p @board[row][column]
         return true if @board[row][column] == piece &&
                        @board[row][column + 1] == piece &&
                        @board[row][column + 2] == piece &&
@@ -75,8 +85,41 @@ class Game
       end
     end
   end
+
+  def check_vertical(piece)
+    0.upto(COLUMN_COUNT - 1) do |column|
+      0.upto(ROW_COUNT - 4) do |row|
+        return true if @board[row][column] == piece &&
+                       @board[row + 1][column] == piece &&
+                       @board[row + 2][column] == piece &&
+                       @board[row + 3][column] == piece
+      end
+    end
+  end
+
+  def check_positive_diag(piece)
+    0.upto(COLUMN_COUNT - 4) do |column|
+      0.upto(ROW_COUNT - 4) do |row|
+        return true if @board[row][column] == piece &&
+                       @board[row + 1][column + 1] == piece &&
+                       @board[row + 2][column + 2] == piece &&
+                       @board[row + 3][column + 3] == piece
+      end
+    end
+  end
+
+  def check_negative_diag(piece)
+    0.upto(COLUMN_COUNT - 4) do |column|
+      2.upto(ROW_COUNT - 1) do |row|
+        return true if @board[row][column] == piece &&
+                       @board[row - 1][column + 1] == piece &&
+                       @board[row - 2][column + 2] == piece &&
+                       @board[row - 3][column + 3] == piece
+      end
+    end
+  end
 end
 
-game = Game.new
-game.display_board
-game.player_input
+# game = Game.new
+# game.display_board
+# game.player_input
