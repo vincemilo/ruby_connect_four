@@ -14,7 +14,7 @@ class Game
 
   def display_board
     puts 'Behold the board:'
-    # print "#{(0..6).to_a} \n"
+    print "#{(1..7).to_a} \n"
     @board.reverse.each do |row|
       puts row.to_s
     end
@@ -33,25 +33,24 @@ class Game
   end
 
   def check_input(column)
+    piece = @turn + 1
+
     if valid_move?(column)
       row = get_next_open_row(column)
-      drop_piece(column, row, @turn + 1)
+      drop_piece(column, row, piece)
     end
 
-    if winning_move?(@turn + 1) == true
-      display_board
-      if @turn.zero?
-        puts 'Player 1 wins!'
-      else
-        puts 'Player 2 wins!'
-      end
-      @game_over = true
-      return
-    end
+    return game_end if winning_move?(piece) == true
 
     display_board
     @turn += 1
     @turn %= 2
+  end
+
+  def game_end
+    display_board
+    @turn.zero? ? (puts 'Player 1 wins!') : (puts 'Player 2 wins!')
+    @game_over = true
   end
 
   def drop_piece(column, row, piece)
@@ -69,10 +68,10 @@ class Game
   end
 
   def winning_move?(piece)
-    check_horizontal(piece)
-    check_vertical(piece)
-    check_positive_diag(piece)
-    check_negative_diag(piece)
+    return true if check_horizontal(piece) == true ||
+                   check_vertical(piece) == true ||
+                   check_positive_diag(piece) == true ||
+                   check_negative_diag(piece) == true
   end
 
   def check_horizontal(piece)
@@ -84,6 +83,7 @@ class Game
                        @board[row][column + 3] == piece
       end
     end
+    false
   end
 
   def check_vertical(piece)
@@ -95,6 +95,7 @@ class Game
                        @board[row + 3][column] == piece
       end
     end
+    false
   end
 
   def check_positive_diag(piece)
@@ -106,6 +107,7 @@ class Game
                        @board[row + 3][column + 3] == piece
       end
     end
+    false
   end
 
   def check_negative_diag(piece)
@@ -118,6 +120,7 @@ class Game
       end
     end
   end
+  false
 end
 
 # game = Game.new
