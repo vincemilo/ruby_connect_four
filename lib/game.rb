@@ -38,13 +38,12 @@ class Game
     if valid_move?(column)
       row = get_next_open_row(column)
       drop_piece(column, row, piece)
+      display_board
+      @turn += 1
+      @turn %= 2
     end
 
-    return game_end if winning_move?(piece) == true
-
-    display_board
-    @turn += 1
-    @turn %= 2
+    return game_end if winning_move?(piece)
   end
 
   def game_end
@@ -58,7 +57,13 @@ class Game
   end
 
   def valid_move?(column)
-    @board[ROW_COUNT - 1][column].zero?
+    if column > 6 || column.negative? || column =~ /\D/ ||
+       @board[ROW_COUNT - 1][column].nil?
+      puts 'Invalid entry, please try again.'
+    else
+      @board[ROW_COUNT - 1][column].zero?
+      p @board[ROW_COUNT - 1].to_s
+    end
   end
 
   def get_next_open_row(column)
@@ -68,10 +73,8 @@ class Game
   end
 
   def winning_move?(piece)
-    return true if check_horizontal(piece) == true ||
-                   check_vertical(piece) == true ||
-                   check_positive_diag(piece) == true ||
-                   check_negative_diag(piece) == true
+    [check_horizontal(piece), check_vertical(piece), check_positive_diag(piece),
+     check_negative_diag(piece)].any? { |e| e == true }
   end
 
   def check_horizontal(piece)
@@ -83,7 +86,6 @@ class Game
                        @board[row][column + 3] == piece
       end
     end
-    false
   end
 
   def check_vertical(piece)
@@ -95,7 +97,6 @@ class Game
                        @board[row + 3][column] == piece
       end
     end
-    false
   end
 
   def check_positive_diag(piece)
@@ -107,7 +108,6 @@ class Game
                        @board[row + 3][column + 3] == piece
       end
     end
-    false
   end
 
   def check_negative_diag(piece)
@@ -120,9 +120,19 @@ class Game
       end
     end
   end
-  false
 end
 
-# game = Game.new
+game = Game.new
 # game.display_board
 # game.player_input
+
+player = 1
+column = 0
+row = 0
+while row < 6
+  game.drop_piece(column, row, player)
+  row += 1
+end
+
+game.display_board
+game.valid_move?(0)

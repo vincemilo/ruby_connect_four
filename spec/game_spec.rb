@@ -63,19 +63,36 @@ describe Game do
 
   describe '#check_horizontal' do
     player = 1
+    context 'when it is on the bottom row' do
+      before do
+        column = 0
+        row = 0
+        while column < 4
+          game.drop_piece(column, row, player)
+          column += 1
+        end
+      end
 
-    before do
-      column = 0
-      row = 0
-      while column < 4
-        game.drop_piece(column, row, player)
-        column += 1
+      it 'checks for 4 pieces in a row horizontally' do
+        player = 1
+        expect(game.check_horizontal(player)).to be true
       end
     end
 
-    it 'checks for 4 pieces in a row horizontally' do
-      player = 1
-      expect(game.check_horizontal(player)).to be true
+    context 'when it is on the top row' do
+      before do
+        column = 3
+        row = 5
+        while column < 7
+          game.drop_piece(column, row, player)
+          column += 1
+        end
+      end
+
+      it 'checks for 4 pieces in a row horizontally' do
+        player = 1
+        expect(game.check_horizontal(player)).to be true
+      end
     end
   end
 
@@ -125,7 +142,6 @@ describe Game do
         column -= 1
         row += 1
       end
-      game.display_board
     end
 
     it 'checks for 4 pieces in a negative diagonal' do
