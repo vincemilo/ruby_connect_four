@@ -98,54 +98,104 @@ describe Game do
 
   describe '#check_vertical' do
     player = 2
+    context 'when it is on the bottom row' do
+      before do
+        column = 6
+        row = 0
+        while row < 4
+          game.drop_piece(column, row, player)
+          row += 1
+        end
+      end
 
-    before do
-      column = 4
-      row = 0
-      while row < 4
-        game.drop_piece(column, row, player)
-        row += 1
+      it 'checks for 4 pieces in a row vertically' do
+        expect(game.check_vertical(player)).to be true
       end
     end
 
-    it 'checks for 4 pieces in a row vertically' do
-      expect(game.check_vertical(player)).to be true
+    context 'when it is on the top row' do
+      before do
+        column = 0
+        row = 2
+        while row < 6
+          game.drop_piece(column, row, player)
+          row += 1
+        end
+      end
+
+      it 'checks for 4 pieces in a row vertically' do
+        expect(game.check_vertical(player)).to be true
+      end
     end
   end
 
   describe '#check_positive_diag' do
     player = 1
+    context 'when it is on the bottom row' do
+      before do
+        column = 0
+        row = 0
+        while column < 4
+          game.drop_piece(column, row, player)
+          column += 1
+          row += 1
+        end
+      end
 
-    before do
-      column = 0
-      row = 0
-      while column < 4
-        game.drop_piece(column, row, player)
-        column += 1
-        row += 1
+      it 'checks for 4 pieces in a positive diagonal' do
+        expect(game.check_positive_diag(player)).to be true
       end
     end
 
-    it 'checks for 4 pieces in a positive diagonal' do
-      expect(game.check_positive_diag(player)).to be true
+    context 'when it is on the top row' do
+      before do
+        column = 3
+        row = 2
+        while column < 7
+          game.drop_piece(column, row, player)
+          column += 1
+          row += 1
+        end
+      end
+
+      it 'checks for 4 pieces in a positive diagonal' do
+        expect(game.check_positive_diag(player)).to be true
+      end
     end
   end
 
   describe '#check_negative_diag' do
     player = 2
+    context 'when it is on the bottom row' do
+      before do
+        column = 6
+        row = 0
+        while column > 2
+          game.drop_piece(column, row, player)
+          column -= 1
+          row += 1
+        end
+      end
 
-    before do
-      column = 6
-      row = 0
-      while column > 2
-        game.drop_piece(column, row, player)
-        column -= 1
-        row += 1
+      it 'checks for 4 pieces in a negative diagonal' do
+        expect(game.check_negative_diag(player)).to be true
       end
     end
 
-    it 'checks for 4 pieces in a negative diagonal' do
-      expect(game.check_negative_diag(player)).to be true
+    context 'when it is on the top row' do
+      before do
+        column = 3
+        row = 2
+        while column >= 0
+          game.drop_piece(column, row, player)
+          column -= 1
+          row += 1
+        end
+      end
+
+      it 'checks for 4 pieces in a positive diagonal' do
+        expect(game.check_negative_diag(player)).to be true
+      end
     end
   end
 end

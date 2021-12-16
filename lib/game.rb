@@ -38,12 +38,15 @@ class Game
     if valid_move?(column)
       row = get_next_open_row(column)
       drop_piece(column, row, piece)
+      return game_end if winning_move?(piece)
+
       display_board
       @turn += 1
       @turn %= 2
+    else
+      display_board
+      puts 'Invalid entry, please try again.'
     end
-
-    return game_end if winning_move?(piece)
   end
 
   def game_end
@@ -57,13 +60,9 @@ class Game
   end
 
   def valid_move?(column)
-    if column > 6 || column.negative? || column =~ /\D/ ||
-       @board[ROW_COUNT - 1][column].nil?
-      puts 'Invalid entry, please try again.'
-    else
-      @board[ROW_COUNT - 1][column].zero?
-      p @board[ROW_COUNT - 1].to_s
-    end
+    return false if column > 6 || column.negative? || column =~ /\D/
+
+    @board[ROW_COUNT - 1][column].zero?
   end
 
   def get_next_open_row(column)
@@ -122,17 +121,6 @@ class Game
   end
 end
 
-game = Game.new
+# game = Game.new
 # game.display_board
 # game.player_input
-
-player = 1
-column = 0
-row = 0
-while row < 6
-  game.drop_piece(column, row, player)
-  row += 1
-end
-
-game.display_board
-game.valid_move?(0)
